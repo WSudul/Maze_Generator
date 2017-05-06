@@ -126,6 +126,7 @@ inline void Matrix<T>::fillRow( T *const data, std::size_t n, std::size_t row)
 		this->at(row,i) = *(data_ptr++);
 	}
 
+
 }
 
 template<typename T>
@@ -142,6 +143,9 @@ inline void Matrix<T>::fillCol( T *const data, std::size_t n, std::size_t col)
 	{
 		this->at(i,col) = *(data_ptr++);
 	}
+
+	
+
 }
 
 
