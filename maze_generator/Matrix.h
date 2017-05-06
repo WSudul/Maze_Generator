@@ -9,13 +9,13 @@
 
 
 /*!
-	Matrix - representing MxN matrix (M- Columns, N- Rows)
+	Matrix - representing MxN matrix (N- Rows,M- Columns)
 
-	Elements should be accessed via (Column_index,Row_index) scheme.
+	Elements should be accessed via (Row_index,Column_index) scheme.
 
 	In this version elements are stored in dynamic 2d array (array of pointers) where elements are accessed as ptr[row_index][column_index].
 	A revision might store elements in different version of container (vector of vectors?,
-	Acccess outside class is provided by referece to element via Matrix::at(column_index,row_index) method.
+	Acccess outside class is provided by referece to element via Matrix::at(row_index,column_index) method.
 */
 template<typename T>
 class Matrix
@@ -66,8 +66,8 @@ public:
 private:
 	virtual T** allocate(std::size_t size1, std::size_t size2);
 
-	std::size_t size1; //columns
-	std::size_t size2; //rows
+	std::size_t size1; //rows
+	std::size_t size2; //columns
 
 	T **ptr; //pointer to 2d array
 
@@ -97,9 +97,9 @@ template<typename T>
 Matrix<T>::Matrix(const Matrix & M)
 {
 	this->ptr = allocate(M.size1, M.size2);
-	for (std::size_t i = 0; i < M.size2; i++)
-		for (std::size_t j = 0; j < M.size1; j++)
-			this->at(j,i) = M.at(j, i);
+	for (std::size_t i = 0; i < M.size1; i++)
+		for (std::size_t j = 0; j < M.size2; j++)
+			this->at(i,j) = M.at(i, j);
 		//std::copy(M.ptr[i][0], M.ptr[i][size2], this->ptr[i][0]);
 	this->allocated = M.allocated;
 }
@@ -113,7 +113,7 @@ bool Matrix<T>::isAllocated() const
 template<typename T>
 inline void Matrix<T>::fillRow( T *const data, std::size_t n, std::size_t row)
 {
-	if (row > size2 || n > size1) //check if trying to access out of bounds regions
+	if (row > size1 || n > size2) //check if trying to access out of bounds regions
 	{
 		//#TODO throw exception?
 		throw std::out_of_range("Out of range element in Matrix!");
@@ -123,7 +123,7 @@ inline void Matrix<T>::fillRow( T *const data, std::size_t n, std::size_t row)
 
 	for (std::size_t i = 0; i < n; i++)
 	{
-		this->at(i,row) = *(data_ptr++);
+		this->at(row,i) = *(data_ptr++);
 	}
 
 }
@@ -131,7 +131,7 @@ inline void Matrix<T>::fillRow( T *const data, std::size_t n, std::size_t row)
 template<typename T>
 inline void Matrix<T>::fillCol( T *const data, std::size_t n, std::size_t col)
 {
-	if (col > size1 || n > size2) //check if trying to access out of bounds regions
+	if (col > size2 || n > size1) //check if trying to access out of bounds regions
 	{
 		//#TODO throw exception?
 		throw std::out_of_range("Out of range element in Matrix!");
@@ -140,7 +140,7 @@ inline void Matrix<T>::fillCol( T *const data, std::size_t n, std::size_t col)
 
 	for (std::size_t i = 0; i < n; i++)
 	{
-		this->at(col,i) = *(data_ptr++);
+		this->at(i,col) = *(data_ptr++);
 	}
 }
 
@@ -174,7 +174,7 @@ inline void Matrix<T>::reallocate(std::size_t newSize1, std::size_t newSize2, bo
 
 			for (std::size_t j = 0; j < bound2; j++)
 			{
-				newPtr[j][i]=this->at(i, j) ;
+				newPtr[i][j]=this->at(i, j) ;
 			}
 
 		}
@@ -201,11 +201,11 @@ inline std::string Matrix<T>::toString(std::size_t row, std::size_t col, char se
 
 	std::ostringstream  oss;
 
-	for (std::size_t i = 0; i < col; i++)
+	for (std::size_t i = 0; i < row; i++)
 	{
-		for (std::size_t j = 0; j < row; j++)
+		for (std::size_t j = 0; j < col; j++)
 		{
-			oss << this->at(j, i) << separator;
+			oss << this->at(i, j) << separator;
 		}
 		oss << "\n";
 	}
@@ -220,11 +220,11 @@ inline std::string Matrix<T>::toString(char separator)
 
 	std::ostringstream  oss;
 
-	for (std::size_t i = 0; i < size2; i++)
+	for (std::size_t i = 0; i < size1; i++)
 	{
-		for (std::size_t j = 0; j < size1; j++)
+		for (std::size_t j = 0; j < size2; j++)
 		{
-			oss << this->at(j, i) << separator;
+			oss << this->at(i, j) << separator;
 		}
 		oss << "\n";
 	}
@@ -250,13 +250,14 @@ Matrix<T>::~Matrix()
 {
 	for (std::size_t i = 0; i < size1; i++)
 		delete[] ptr[i];
+	delete[] ptr;
 }
 
 template<typename T>
-T& Matrix<T>::at(std::size_t col ,std::size_t row) const
+T& Matrix<T>::at(std::size_t row ,std::size_t col) const
 {
-	if (row > size2 || col > size1)
-		throw std::out_of_range("Bad range on Matrix");
+	if (row > size1 || col > size2)
+		throw std::out_of_range("Bad range accessed on Matrix");
 
 	return this->ptr[row][col];
 }
@@ -269,7 +270,7 @@ T** Matrix<T>::allocate(std::size_t size1, std::size_t size2)
 
 	try
 	{
-		pointer = new T*[size2]();
+		pointer = new T*[size1]();
 	}
 	catch (const std::bad_alloc&)
 	{
@@ -277,11 +278,11 @@ T** Matrix<T>::allocate(std::size_t size1, std::size_t size2)
 		throw std::exception("Failed to allocate memory for Matrix");
 		exit(0);
 	}
-	for (std::size_t i = 0; i < size2; i++)
+	for (std::size_t i = 0; i < size1; i++)
 	{
 		try
 		{
-			pointer[i] = new T[size1]();
+			pointer[i] = new T[size2]();
 		}
 		catch (const std::bad_alloc&)
 		{
