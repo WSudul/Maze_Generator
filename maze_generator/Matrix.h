@@ -6,7 +6,7 @@
 #include <exception>
 #include <string>
 #include <sstream>
-
+#include <iostream>
 
 /*!
 	Matrix - representing MxN matrix (N- Rows,M- Columns)

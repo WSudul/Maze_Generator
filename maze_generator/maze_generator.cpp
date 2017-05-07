@@ -20,7 +20,19 @@ int main()
 	std::cout << m1.toString();
 
 	m1.reallocate(4, 4, true);
-	std::cout << m1.toString();
+	std::cout << m1.toString() << std::endl;
+
+
+	std::cout << "Matrix of tiles" << std::endl;
+
+	Matrix<SquareTile> m2(3, 3);
+	SquareTile tilerow[3] = { SquareTile(true,true,false,false),SquareTile(true,true,true,false),SquareTile(false,false,false,false) };
+
+	m2.fillRow(tilerow, 3, 0);
+	m2.fillRow(tilerow, 3, 1);
+
+	std::cout << tilerow[0] << std::endl;
+	std::cout << m2.toString();
 
     return 0;
 }
