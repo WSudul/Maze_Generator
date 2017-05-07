@@ -1,19 +1,19 @@
 #pragma once
 #include <memory>
 
+/*!
+	abstract class used as common object for generating mazes
+	Create should retrun smart pointer to created object 
+*/
 class GeneratorBase
 {
 public:
 
-	GeneratorBase()
-	{
-	}
+	GeneratorBase();
 
 
 
-	virtual ~GeneratorBase()
-	{
-	}
+	virtual ~GeneratorBase();
 
 
 
