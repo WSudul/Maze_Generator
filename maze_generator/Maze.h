@@ -10,6 +10,8 @@ public:
 	virtual ~Maze();
 
 	void generate();
+	void clear();
+	std::size_t sizeOfMaze();
 
 };
 
@@ -27,6 +29,18 @@ inline Maze<T>::~Maze()
 template<typename T>
 inline void Maze<T>::generate()
 {
+
 	//create maze and store it in container
 	generated = true;
+}
+
+template<typename T>
+inline void Maze<T>::clear()
+{
+}
+
+template<typename T>
+inline std::size_t Maze<T>::sizeOfMaze()
+{
+	return std::size_t();
 }

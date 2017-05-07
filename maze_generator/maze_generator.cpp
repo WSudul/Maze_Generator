@@ -4,7 +4,7 @@
 #include <iostream>
 #include "Matrix.h"
 #include "Maze.h"
-
+#include "Kruskal.h"
 
 int main()
 {

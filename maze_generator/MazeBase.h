@@ -27,6 +27,21 @@ public:
 	virtual void generate() = 0;
 
 	/*!
+		clear the object by resetting all data and deleting object pointed by container
+	*/
+	virtual void clear()
+	{
+		container.reset();
+		WallsNo = PathTIlesNo = 0;
+		generated = false;
+	};
+	
+	/*!
+		return size of maze in bytes
+	*/
+	std::size_t sizeOfMaze()=0;
+
+	/*!
 		return total number of walls in maze
 	*/
 	virtual std::size_t getWallsNo()
@@ -54,7 +69,7 @@ public:
 
 protected:
 
-
+	
 
 	std::size_t WallsNo; //number of walls in maze
 	std::size_t PathTIlesNo; //total number of path tiles in maze
@@ -63,7 +78,7 @@ protected:
 
 	bool generated; //whether a maze has been generated
 
-	T container; //container storing generated maze
+	std::unique_ptr<T> container; //smart pointer to container storing generated maze
 
 };
 
@@ -72,7 +87,7 @@ inline MazeBase<T>::MazeBase():
 WallsNo(0),
 PathTIlesNo(0),
 generated(false),
-container<T>()
+container(nullptr)
 {
 
 }

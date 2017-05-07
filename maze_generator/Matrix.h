@@ -280,7 +280,7 @@ T** Matrix<T>::allocate(std::size_t size1, std::size_t size2)
 	{
 
 		throw std::exception("Failed to allocate memory for Matrix");
-		exit(0);
+		
 	}
 	for (std::size_t i = 0; i < size1; i++)
 	{
