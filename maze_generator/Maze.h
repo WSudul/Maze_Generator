@@ -1,9 +1,10 @@
 #pragma once
 #include "MazeBase.h"
+#include "Matrix.h"
+#include "SquareTile.h"
 
-template<typename T>
 class Maze :
-	public virtual MazeBase<T>
+	public virtual MazeBase
 {
 public:
 	Maze();
@@ -13,34 +14,46 @@ public:
 	void clear();
 	std::size_t sizeOfMaze();
 
+private:
+
+	std::unique_ptr<Matrix<SquareTile>> container; //smart pointer to object storing maze
+
 };
 
-template<typename T>
-inline Maze<T>::Maze():
-MazeBase()
+
+Maze::Maze():
+MazeBase(),
+container(nullptr)
 {
 }
 
-template<typename T>
-inline Maze<T>::~Maze()
+
+Maze::~Maze()
 {
 }
 
-template<typename T>
-inline void Maze<T>::generate()
-{
 
+void Maze::generate()
+{
+	if (container) //checks whether smart pointer points is pointing anywhere (not nullptr)
+		clear();
+
+	container.reset(new Matrix<SquareTile>());
 	//create maze and store it in container
 	generated = true;
 }
 
-template<typename T>
-inline void Maze<T>::clear()
+
+void Maze::clear()
 {
+	
+	container.reset();
+
+	generated = false;
 }
 
-template<typename T>
-inline std::size_t Maze<T>::sizeOfMaze()
+
+std::size_t Maze::sizeOfMaze()
 {
-	return std::size_t();
+	return container->getSize1()*container->getSize2();
 }
