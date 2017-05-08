@@ -2,6 +2,15 @@
     CONSOLE APPLICATION : maze_generator Project Overview
 ========================================================================
 
+The goal of application is to generate randomized mazes based on various algorithms
+
+The result will be presented as either 
+-Graph object (adjacency list) containing all the paths and implicitly walls
+-2D array (Matrix) ,a visual representation of maze (ready to be exported to for eg a bitmap file) #TODO to be considered
+
+
+Maze generation is based on graph representation of the Grid (each Vertex has 4 Edges to 4 adjacent Vertexes) or different structure (for eg A triangle)
+
 AppWizard has created this maze_generator application for you.
 
 This file contains a summary of what you will find in each of the files that
