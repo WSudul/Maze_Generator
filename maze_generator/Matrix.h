@@ -20,19 +20,33 @@
 template<typename T>
 class Matrix
 {
-	//#TODO consider typedefing std::size_t ? No obvious short name at the time
+	
 public:
 	
 	/*!
 		ctor
 	*/
 	Matrix();
+
+	/*!
+		size1 - rows, size2 columns
+	*/
 	Matrix(std::size_t size1, std::size_t size2);
+	
+	/*!
+		copy ctor
+	*/
 	Matrix(const Matrix &M);
+
+
+	/*!
+		dtor
+	*/
 	virtual ~Matrix();
 
 	/*!
-		returns reference to object at given positions
+		returns reference to object at given positions.
+		will throw exception if indexes are out of bounds.
 	*/
 	virtual inline T& at(std::size_t size1=0, std::size_t col = 0) const ;
 
@@ -41,29 +55,54 @@ public:
 	*/
 	bool isAllocated() const;
 
-	void fillRow(T *const data, std::size_t n, std::size_t row);
-	void fillCol(T *const data, std::size_t n, std::size_t col);
+	/*!
+		fills selected row, using a data provied by pointer data up to n elements
+		Will throw exception if row index or data size is out of bounds
+	*/
+
+
+	virtual void fillRow(T *const data, std::size_t n, std::size_t row);
+	/*!
+	fills selected column, using a data provied by pointer data up to n elements
+	Will throw exception if row index or data size is out of bounds
+	*/
+	virtual void fillCol(T *const data, std::size_t n, std::size_t col);
 
 
 	/*!
 		reallocate Matrix - change it's size
 	*/
-	virtual void reallocate(std::size_t newSize1, std::size_t newSize2, bool keepData = false);;
+	virtual void reallocate(std::size_t newSize1, std::size_t newSize2, bool keepData = false);
 
 	/*!
-		return string representation of matrix
+		clears contents of the Matrix
 	*/
-	virtual std::string toString(std::size_t row, std::size_t col, char separator = ' ');;
-
-	virtual std::string toString(char separator = ' ');
+	virtual void clear();
 
 
 
+	/*!
+		return string representation of selected part of matrix
+	*/
+	virtual std::string toString(std::size_t row=size1, std::size_t col=size2, char separator = ' ');
+
+	/*!
+		getter for row size
+	*/
 	std::size_t getSize1() const;
+
+	/*!
+		getter for column size
+	*/
 	std::size_t getSize2() const;
 
 
 private:
+
+	/*!
+	
+		allocates a dynamic pointer array and returns pointer to T pointer
+	*/
 	virtual T** allocate(std::size_t size1, std::size_t size2);
 
 	std::size_t size1; //rows
@@ -71,7 +110,7 @@ private:
 
 	T **ptr; //pointer to 2d array
 
-	bool allocated;
+	bool allocated; //true any data was allocated #TODO consider removing since at() can modify contents 
 
 
 };
@@ -171,7 +210,8 @@ inline void Matrix<T>::reallocate(std::size_t newSize1, std::size_t newSize2, bo
 		std::cout << "bound:" << bound1 << " " << bound2 << std::endl;
 		for (std::size_t i = 0; i < bound1; i++)
 		{
-			//fill columns with old values #TODO rewrite methods to use fillCol(ptr[i], bound2, i) <-it's currently modyfing ptr only
+			//fill columns with old values 
+			//#TODO rewrite methods to use fillCol(ptr[i], bound2, i) <-it's currently modyfing ptr only
 			
 			//copy of fillCol method
 			
@@ -193,6 +233,21 @@ inline void Matrix<T>::reallocate(std::size_t newSize1, std::size_t newSize2, bo
 	ptr = newPtr;
 
 
+}
+
+/*!
+clears contents of the Matrix
+*/
+template<typename T>
+void Matrix<T>::clear()
+{
+	for (std::size_t i = 0; i < oldSize1; i++)
+		delete[] ptr[i];
+	delete[] ptr;
+
+	size1 = size2 = 0;
+	allocated = false;
+	ptr = nullptr;
 }
 
 
@@ -218,24 +273,7 @@ inline std::string Matrix<T>::toString(std::size_t row, std::size_t col, char se
 
 }
 
-template<typename T>
-inline std::string Matrix<T>::toString(char separator)
-{
 
-	std::ostringstream  oss;
-
-	for (std::size_t i = 0; i < size1; i++)
-	{
-		for (std::size_t j = 0; j < size2; j++)
-		{
-			oss << this->at(i, j) << separator;
-		}
-		oss << "\n";
-	}
-
-	return oss.str();
-
-}
 
 template<typename T>
 inline std::size_t Matrix<T>::getSize1() const
