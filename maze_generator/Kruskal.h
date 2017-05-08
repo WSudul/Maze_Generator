@@ -13,10 +13,10 @@ public:
 	~Kruskal();
 
 
-	void create();
-	void create(std::size_t size1, std::size_t size2);
+	/*void create();
+	void create(std::size_t size1, std::size_t size2);*/
 
-	static std::unique_ptr<Matrix<SquareTile>> create(std::size_t size1, std::size_t size2,std::pair<std::size_t,std::size_t> startPos);
+	static std::unique_ptr<Matrix<bool>> create(std::size_t size1, std::size_t size2);
 	
 };
 
