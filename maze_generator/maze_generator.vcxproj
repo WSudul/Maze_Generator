@@ -145,7 +145,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GeneratorBase.h" />
+    <ClInclude Include="Graph.h" />
     <ClInclude Include="Kruskal.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="Maze.h" />
@@ -155,7 +155,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="GeneratorBase.cpp" />
+    <ClCompile Include="Graph.cpp" />
     <ClCompile Include="Kruskal.cpp" />
     <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="Maze.cpp" />
